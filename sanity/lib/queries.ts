@@ -22,7 +22,7 @@ export const STARTUP_BY_ID_QUERY =
     slug,
     _createdAt,
     author -> {
-      _id, name, bio, image
+      _id, name, bio, image,username
     },
     views,
     description,
@@ -31,3 +31,8 @@ export const STARTUP_BY_ID_QUERY =
     pitch
 }
 `);
+
+export const STARTUP_VIEWS_QUERY =
+  defineQuery(`*[_type == "startup" && _id == $id][0]{
+    _id, views
+  }`);

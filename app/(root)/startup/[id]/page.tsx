@@ -4,8 +4,12 @@ import { STARTUP_BY_ID_QUERY } from "@/sanity/lib/queries";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
+import markdownit from "markdown-it";
+import { Skeleton } from "@/components/ui/skeleton";
+import View from "@/components/View";
 
+const md = markdownit();
 export const experimetal_ppr = true;
 
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
@@ -14,6 +18,8 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const post = await client.fetch(STARTUP_BY_ID_QUERY, { id });
 
   if (!post) return notFound();
+
+  const parseContent = md.render(post?.pitch || " ");
 
   return (
     <>
@@ -44,9 +50,34 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 height={64}
                 className="rounded-full drop-shadow-lg"
               />
+
+              <div>
+                <p className="text-20-medium">{post.author?.name}</p>
+                <p className="text-16-medium !text-black-300">
+                  @{post.author?.username}
+                </p>
+              </div>
             </Link>
+            <p className="category-tag">{post?.category}</p>
           </div>
+
+          <h3 className="text-30-bold">Pitch Details</h3>
+          {parseContent ? (
+            <article
+              className="prose max-w-4xl font-work-sans break-all"
+              dangerouslySetInnerHTML={{ __html: parseContent }}
+            />
+          ) : (
+            <p className="no-result">No pitch details available</p>
+          )}
         </div>
+
+        <hr className="divider" />
+
+        {/* Editor Selected Starups */}
+        <Suspense fallback={<Skeleton className="view_skeleton" />}>
+          <View id={id} />
+        </Suspense>
       </section>
     </>
   );
