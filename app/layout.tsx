@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import "easymde/dist/easymde.min.css";
+import { Toaster } from "@/components/ui/toaster";
 
 const workSans = localFont({
   src: [
@@ -55,7 +56,7 @@ const workSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Re-Start",
+  title: "ReStart",
   description: "Pitch, Vote, and Grow your next big idea",
 };
 
@@ -68,6 +69,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${workSans.variable} ${workSans.variable} antialiased`}>
         {children}
+        <Toaster />
       </body>
     </html>
   );
